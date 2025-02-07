@@ -1,9 +1,18 @@
-from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # If you want to run a snippet of code before or after the crew starts, 
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+
+llm = LLM(
+	model="ollama/mistral",
+	temperature=0.5,
+	base_url="http://localhost:11434"
+)
 
 @CrewBase
 class EcobasedCrew():
@@ -21,6 +30,7 @@ class EcobasedCrew():
 	def researcher(self) -> Agent:
 		return Agent(
 			config=self.agents_config['researcher'],
+			llm=llm,
 			verbose=True
 		)
 
@@ -28,6 +38,7 @@ class EcobasedCrew():
 	def reporting_analyst(self) -> Agent:
 		return Agent(
 			config=self.agents_config['reporting_analyst'],
+			llm=llm,
 			verbose=True
 		)
 
